@@ -3,11 +3,11 @@ from matplotlib import style
 style.use('ggplot')
 import numpy as np
 import sklearn
+from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 import pandas as pd
-import os
-import tarfile
+from pandas.plotting import scatter_matrix
 
 housing = pd.read_csv("housing.csv")
 print(housing.head())
@@ -45,6 +45,37 @@ print(housing.head())
 # #then drop income cat column from test sets:
 # strat_train_set.drop('income_cat', 1, inplace=True)
 # strat_test_set.drop('income_cat', 1, inplace=True)
+
+#Explore Data
+# plt.scatter(housing['longitude'], housing['latitude'],s=10, color = 'b')
+# plt.show()
+#with density of data point using alpha = 0.1:
+# plt.scatter(housing['longitude'], housing['latitude'],s=10, color = 'b', alpha = 0.1)
+# plt.show()
+
+# housing.plot(kind= 'scatter',x='longitude', y='latitude', alpha=0.4,
+# 	s=housing['population']/100, label = 'population', c='median_house_value',
+# 	cmap=plt.get_cmap('jet'), colorbar=True)
+# plt.show()
+
+# CORRELATION WITH MEDIAN HOUSE VALUE
+corr_matrix = housing.corr()
+print(corr_matrix['median_house_value'].sort_values(ascending = False))
+
+#CORRELATION USING PANDAS SCATTER MATRIX
+#Looking for correlations 
+scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal='kde')
+
+
+
+
+
+
+
+
+
+
+
 
 
 

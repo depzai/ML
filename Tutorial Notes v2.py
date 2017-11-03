@@ -959,5 +959,14 @@ destination = "/Users/bddupont/Desktop/Test1"
 shutil.copytree(source, destination)
 
 
+import plotly.plotly as py
+import plotly.figure_factory as ff
 
+import pandas as pd
+
+df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv')
+df_sample = df[100:120]
+
+table = ff.create_table(df_sample)
+py.iplot(table, filename='pandas_table')
 
