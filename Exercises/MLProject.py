@@ -63,8 +63,11 @@ corr_matrix = housing.corr()
 print(corr_matrix['median_house_value'].sort_values(ascending = False))
 
 #CORRELATION USING PANDAS SCATTER MATRIX
-#Looking for correlations 
-scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal='kde')
+#Looking for correlations for long, lat, pop, mi, mhv
+
+housing = housing[['longitude', 'latitude', 'population', 'median_income', 'median_house_value']]
+print(scatter_matrix(housing, alpha=0.2, figsize=(6, 6), diagonal='kde', color = 'b'))
+plt.show()
 
 
 
