@@ -6,6 +6,8 @@ import sklearn
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import Imputer
+from sklear.preprocessing import LabelEncoder
 import pandas as pd
 from pandas.plotting import scatter_matrix
 
@@ -32,19 +34,19 @@ print(housing.head())
 # train_set, test_set = train_test_split(housing, test_size = 0.2, random_state = 42)
 
 #SAMPLING USING PARAMETERS TO GET A SAMPLE THAT IS REPRESENTATIVE of dataset
-# # Create an income category column with 5 categories:
-# housing['income_cat'] = np.ceil(housing['median_income']/1.5)
-# #Any income over 5 is 5.0
-# housing['income_cat'].where(housing['income_cat'] < 5, 5.0, inplace=True)
-# print(housing.head())
-# split = StratifiedShuffleSplit(n_splits = 1, test_size = 0.2, random_state = 42)
-# for train_index, test_index in split.split(housing, housing['income_cat']):
-# 	strat_train_set = housing.loc[train_index]
-# 	strat_test_set = housing.loc[test_index]
-# print(housing['income_cat'].value_counts() / len(housing))
-# #then drop income cat column from test sets:
-# strat_train_set.drop('income_cat', 1, inplace=True)
-# strat_test_set.drop('income_cat', 1, inplace=True)
+# Create an income category column with 5 categories:
+housing['income_cat'] = np.ceil(housing['median_income']/1.5)
+#Any income over 5 is 5.0
+housing['income_cat'].where(housing['income_cat'] < 5, 5.0, inplace=True)
+print(housing.head())
+split = StratifiedShuffleSplit(n_splits = 1, test_size = 0.2, random_state = 42)
+for train_index, test_index in split.split(housing, housing['income_cat']):
+	strat_train_set = housing.loc[train_index]
+	strat_test_set = housing.loc[test_index]
+print(housing['income_cat'].value_counts() / len(housing))
+#then drop income cat column from test sets:
+strat_train_set.drop('income_cat', 1, inplace=True)
+strat_test_set.drop('income_cat', 1, inplace=True)
 
 #Explore Data
 # plt.scatter(housing['longitude'], housing['latitude'],s=10, color = 'b')
@@ -59,15 +61,45 @@ print(housing.head())
 # plt.show()
 
 # CORRELATION WITH MEDIAN HOUSE VALUE
-corr_matrix = housing.corr()
-print(corr_matrix['median_house_value'].sort_values(ascending = False))
+# corr_matrix = housing.corr()
+# print(corr_matrix['median_house_value'].sort_values(ascending = False))
 
 #CORRELATION USING PANDAS SCATTER MATRIX
 #Looking for correlations for long, lat, pop, mi, mhv
 
-housing = housing[['longitude', 'latitude', 'population', 'median_income', 'median_house_value']]
-print(scatter_matrix(housing, alpha=0.2, figsize=(6, 6), diagonal='kde', color = 'b'))
-plt.show()
+# housing = housing[['longitude', 'latitude', 'population', 'median_income', 'median_house_value']]
+# print(scatter_matrix(housing, alpha=0.2, figsize=(6, 6), diagonal='kde', color = 'b'))
+# plt.show()
+
+#Prepare data for ML - training set
+X_train = strat_train_set.drop('median_house_value', 1, inplace=True)
+y_train = strat_train_set['median_house_value'].copy()
+
+# #Data Cleaning
+# #IMPUTER from sklearn replaces missing values with median of attribute
+
+# imputer = Imputer(strategy = 'median')
+
+#ocean proximity doesn't have values, so we'll drop it for this
+housing_num = housing.drop('ocean_proximity', 1, inplace=True)
+
+imputer.fit(housing_num)
+X = imputer.transform(housing_num)
+
+#Change ocean proximity to numbers:
+encoder = LabelEncoder()
+housing_cat = housing['ocean_proximity']
+housing_cat_encoded = encoder.fit_transform(housing_cat)
+# issue is that in this instance the numbers aren't in order
+# can be fixed with OneHotEncoder or with custom function
+
+
+
+
+
+
+
+
 
 
 
