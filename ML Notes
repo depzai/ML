@@ -1,0 +1,483 @@
+Supervised Classification:
+-------------------------------
+Recognize someone in a tagged photo
+Recommend new song based on music choices
+
+Non Supervised:
+----------------
+Analyze data for weird looking trx for fraud: because we haven't defined what a weird looking trx is
+Cluster udacity students into types based on learning styles: no criteria, no big bank of data to draw from
+
+Feature and labels:
+--------------------
+Feature is an input, and the label is the output
+Feature in music: genre, tempo, intensity
+Plot the feature in range (medium tempo, high intensity)
+Label: like, don't like
+Look at the data, where does a new song plot (in like or don't like area)
+
+Scatter plot: different situations past based on values
+
+Decision Surface:
+-----------------
+limit between like and don't like: straight line -> linear
+
+SKLEARN - Naive BAYES:
+-----------------------
+
+Naive Bayes example:
+Chris's emails:
+80% deal, 10% Love, 10% life
+
+Sara:
+50% deal, 10% love, 30% life
+
+Prior Probability an email is from Chris: 50% (based on 2 people)
+
+For an email named "love life":
+Posterior prob of being from Chris:
+50% * 10% * 10% = 0.005
+Posterior prob of being from Sara:
+50% * 10% * 30% = 0.015
+NOrmalizing value: 0.005 + 0.015 = 0.02
+Normalized posterior proba for Chris: 0.005 / 0.02 = 0.25
+Normalized posterior proba for Sara: 0.015 / 0.02 = 0.75
+
+The sum of these 2 probas is 1
+
+http://ogrisel.github.io/scikit-learn.org/sklearn-tutorial/modules/generated/sklearn.naive_bayes.GaussianNB.html
+
+Fit - Train: the clf reviews the patterns to train itself
+
+Classifier is tha algorithm used for the decision making
+>>> import numpy as np
+>>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
+>>> Y = np.array([1, 1, 1, 2, 2, 2]) -- labels values is in class 1 or class 2
+>>> from sklearn.naive_bayes import GaussianNB
+>>> clf = GaussianNB() -- the algorithm
+>>> clf.fit(X, Y) - X is the features, Y is the labels
+GaussianNB()
+>>> print clf.predict([[-0.8, -1]]) -- predicts for this new sets of values
+[1] -- the new set of values is class 1
+
+To calculate accuracy: 
+from sklearn.metrics import accuracy_score
+print(accuracy_score(pred, labels_test) -- compares predictions with labels
+
+Prior Probability: prob before any data is taken into account (e.g. 2 people, so priori prob is 50% that it's person 1)
+
+POsterior prob: based on data
+
+NAIVE BASE: doesn't take into account word order for example
+
+Example:
+import matplotlib.pyplot as plt
+import numpy as np 
+import sklearn
+from sklearn import datasets
+from sklearn import svm
+from sklearn.naive_bayes import GaussianNB
+import matplotlib.pyplot as plt
+
+# X is the dataset with tenure (in x) and RPM (in Y)
+X = np.array([[0, 6], [1, 11], [2, 17], [2, 12], [3, 24], [4, 28], [1,5], [2,6], [3,10], [4,15], [5,20], [4,27]])
+# Y is the values: 1 high, 2 low
+Y = np.array([1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1])
+
+print(X)
+print(Y)
+
+plotx = X[:,0]
+ploty = X[:,1]
+
+plt.scatter(plotx, ploty)
+plt.ylabel('RPM')
+plt.show()
+
+clf = GaussianNB()
+clf.fit(X, Y)
+pred = clf.predict(X)
+
+print(clf.predict([[3, 25]]))
+
+print(pred) 
+from sklearn.metrics import accuracy_score
+print(accuracy_score(pred, Y))
+
+
+Support Vector Machines SVM:
+-----------------------------
+
+OUtputs a line that separates 2 classes of data
+Best line maximizes the distance to the nearest point (margin)
+
+Priority is given to correct classification: if an outlier is excluded even for a maximized margin, SVM won't pick it.
+
+If that's not possible and an OUtlier imbedded in a different class: SVM will do the best it can.
+
+
+So SVM mediates between correct classification and outliers.
+
+mport matplotlib.pyplot as plt
+import numpy as np 
+import sklearn
+from sklearn import datasets
+from sklearn import svm
+import matplotlib.pyplot as plt
+
+# X is the dataset with tenure (in x) and RPM (in Y)
+X = np.array([[0, 6], [1, 11], [2, 17], [2, 12], [3, 24], [4, 28], [1,5], [2,6], [3,10], [4,15], [5,20], [4,27]])
+# Y is the values: 1 high, 2 low
+Y = np.array([1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1])
+
+print(X)
+print(Y)
+
+plotx = X[:,0]
+ploty = X[:,1]
+
+plt.scatter(plotx, ploty)
+plt.ylabel('RPM')
+plt.show()
+
+clf = svm.SVC()
+clf.fit(X, Y)
+pred = clf.predict(X)
+
+print(clf.predict([[3, 25]]))
+
+print(pred) 
+from sklearn.metrics import accuracy_score
+print(accuracy_score(pred, Y))
+
+
+SVM can be non linear with pockets and discontinuous lines.
+
+SVM can support more intricate features and in 3 dimensions:
+- x and y
+- z = x**2 + y**2
+
+doing that can make non linear distribution into linear-separable ones
+
+For example: you can add a feature by transforming a feature:
+
+Abs(x) or x**2 or exp(x)
+
+Kernel Trick:
+Functions take a low dimensional set (x,y) and make them into multi dim ones: (x1,x2,x3,x4,x5,y1.y2.y3.y4.y5) to solve for non linear sets
+
+Kernel can be:
+- Linear
+- Poly:
+- RBF: squiggly decision boundary
+- Sigmoid:
+- Others
+
+SVM Gamma: defines how far the influence of a single training example reaches:
+- high gamma: decision boundary is based on very close values (squiggly)
+- low gamma: even far away values are influencing the boundary (more linear, smoother)
+
+The smoother, straighter the decision boundary, the more the funtion is going to be able to generalize for predictions
+
+Gamma can be specified in SVC function: 1000 is high, 1.0 is low
+
+Gamma
+
+gamma is a parameter of the RBF kernel and can be thought of as the 'spread' of the kernel and therefore the decision region. When gamma is low, the 'curve' of the decision boundary is very low and thus the decision region is very broad. When gamma is high, the 'curve' of the decision boundary is high, which creates islands of decisi
+
+C Parameter:
+
+on-boundaries around data points. We will see this very clearly below.
+
+C
+
+C is a parameter of the SVC learner and is the penalty for misclassifying a data point. When C is small, the classifier is okay with misclassified data points (high bias, low variance). When C is large, the classifier is heavily penalized for misclassified data and therefore bends over backwards avoid any misclassified data points (low bias, high variance).
+
+With a large C: a lot of points will be included.
+
+C of 100 is high, 1 is low
+
+
+OVER FITING:
+Decision surface that is too complex, correctly interprets the data but makes it too complicated to be used: example is several areas instead of a line
+
+
+DECISION TREES:
+===============
+
+from sklearn import tree
+>>> X = [[0, 0], [1, 1]]
+>>> Y = [0, 1]
+>>> clf = tree.DecisionTreeClassifier()
+>>> clf = clf.fit(X, Y)
+After being fitted, the model can then be used to predict the class of samples:
+>>>
+>>> clf.predict([[2., 2.]])
+array([1])
+Alternatively, the probability of each class can be predicted, which is the fraction of training samples of the same class in a leaf:
+>>>
+>>> clf.predict_proba([[2., 2.]])
+array([[ 0.,  1.]])
+DecisionTreeClassifier is capable of both binary (where the labels are [-1, 1]) classification and multiclass (where the labels are [0, …, K-1]) classification.
+
+
+PICKLING:
+==========
+Pickling is a way of saving a python object, like a classifier: once the classifier has been trained, you can save it and use it as a trained classifier without having to retrain it every time
+
+import pickle
+with open('linearregression.pickle', 'wb') as f:
+	pickle.dump(clf,f)
+pickle_in = open('linearregression.pickle', 'rb')
+clf = pickle.load(pickle_in)
+
+Run once and then can comment out the clf.fit(), python will call the train clf from pickle
+
+Pickle is saved in the same directory as the py file.
+
+
+Supervised Classifier - LINEAR REGRESSION ALGO's:
+==========================
+Get a line that is the best fit / find correlation
+y = mx + b
+TO find m:
+m = [meanof(x's) * meanof(y's) - mean of (x's * y's)] / [(meanof(x's))^2 - meanof(x's^2)]
+
+b = meanof(y's) - m * meanof(x's)
+
+Then: make sure that it is a good fit.
+
+Using Squared error (coieefficient of determination): sum of distance btw points and regression line squared. Squared penalizes outliers
+
+r^2 = 1 - SE(y regression line) / (SE(meanof(y)))
+
+SE = squared error, or distance btw y and line squared
+
+We want SE of y line to be less than the mean.
+
+r^2 of 0.8 is pretty good, high is good
+
+
+Supervised Classifier - K nearest neighbors:
+====================================
+Cluster datapoints together using an algo that fits
+Nearest neighbors: "nearest neighbors" based on all data points
+K nearest neighbors: if K = 2, 2 closest neighbors to K using euclidian distance
+K should be an odd number so the vote isn't tied (If 2 nearest neighbors are in 2 different classes, but if you have 3, it will be a 2 to 1 vote)
+SVM scales better than K nearest neighbors
+
+import pandas as pd 
+import numpy as np 
+from sklearn import preprocessing, model_selection 
+from sklearn.neighbors import KNeighborsClassifier
+
+Only include as features actual feature that have an impact on labeling, so exclude neutral ones like IDnumber
+
+EUCLIDIAN Distance:
+===================
+Square root of sum from i to n of (pi - qi)^2
+Wirth pi a point coordinate, and Qi another datapoint coordinate
+In 2 D:
+q(1,3) and p(2,5)
+Euclidian distance: ((1-2)^2+(5-3)^2)^(1/2)
+
+What is a good numnber for K (# of nearest neighbors): 5 is a good one to start with, more isn't alway better
+
+Accuracy: take one training set, one testing set, divide calculated results by actual labels to get accuracy
+
+Supervised Classifier - Support Vector Machines:
+================================================
+Binary classifier: support into 2 groups at a time: positive and negative
+Find the best separating hyperplane of decision boundary that separate the data
+It is the best because the distance between data and the hyperplane is the greatest possible
+ONce you have the hyperplane, you can classify new data on either side of the hyperplane
+
+Vectors:
+--------
+Vector A [3,4], arow going from [0,0] to [3,4].
+Magnitude of a vector or norm is euclidian distance:
+sqrt((3-0)**2 + (4-0)**2) = 5
+Dot Product:
+2 vectors, A[1,3] and B[4,2]
+Dot product = A.B = 1*4 + 3*2 = 10
+
+SVM uses vectors to see which side of a hyperplane a new element is
+
+Unknown point: u
+Vector to the hyperplane:
+if U.W + b (bias) > 0 then plus side, otherwise minus side
+
+if U.W + b = 0: the dot is on the decision boundary
+
+Unknown point U has a features (coordinates): X1 and Y1
+
+Yi is the class of the features we are passing through.
+
+If the class is a plus class: Yi = +1
+If minus class: Yi = -1
+
+In a plus class:
+Yi = 1
+Xi.W + b = 1
+so Yi*(Xi.W + b) = Yi*(1) = 1
+Yi*(Xi.W + b) -1 = 0
+
+In a minus class:
+Yi = -1
+so:
+Yi*(Xi.W + b) = Yi*(-1)
+Yi*(Xi.W + b) -1 = 0
+
+A support Vector is a point that cannot be moved without changing the hyperplane: support vectors are at the border of the plus or minus groups: so the width between both sets of support vectors divided by 2 gets you to the hyperplane
+
+The width has to be maximized for the best decision boundary
+
+Width = (X+ - X- ).W/magnitude(W)
+
+Maximize the width
+
+Width = 2/ magintude(W)
+So we need to minimize magnitude(W)
+We want to minimize (1/2)magnitude(W)**2 for convenience
+Using lagrange 
+
+b bias shifts the hyperplane (like in mx+b)
+
+
+KERNELS:
+--------
+If you have 2 dims (x and y) but you need more to get your hyperplane (like X*y, or X**2), kernel help you do that with infinite dimensions
+
+C:
+---
+C reflects how you want to fit a soft margin (less strict) over your decision boundary. It defaults to 1.
+
+Large C will include a lot of points but might overfit, low C will have a clear delination but might miss a lot of points
+
+If you minimize C, the errors matter less
+
+SVM Parameters:
+----------------
+SVM only separates 2 groups
+If you have more:
+ - OVR: one versus rest
+ - OVO: one versus one
+
+One versus one: do all combinations one at a time
+
+C: first parameter for soft margin
+
+Gamma: don't touch it, can be useful for RBF
+
+CLUSTERING:
+============
+2 major forms:
+	- Flat clustering
+	- Hierarchical clustering
+
+MAchine is given the data only and will determine the clusters
+
+Flat: you tell the machine to fid 2,3 clusters
+Hierarchical: the machine decides how many
+
+K-MEANS Algorithm
+------------------
+Choose what K is, how many clusters you want
+You choose centroids (centers of your clusters) randomly.
+And the algo will calculate each feature set's distance to the centroids
+You classify with which centroid they are closest to.
+Then you take the mean of all clusters to calculate the new centroids
+Tehn you repeat the process unless the centroids are no longer moving: then you have your centroids
+
+Downside of Kmeans: it tends to create clusters of similar sizes.
+
+With Mickey Mouse data set, there should be 3 clusters: head and 2 ears.
+K Meand might have 3 clusters with the same size when the ears should actually be smaller
+
+from sklearn.cluster import KMeans
+
+clf = KMeans(n_clusters = 2)
+defauls n_clusters is 8
+
+
+
+Mean Shift:
+-----------
+Machine finds a number of its own clusters
+
+
+
+
+ML Methodology from ML Book:
+==============================
+
+#Info about dataset:
+# housing.info()
+# print(housing['ocean_proximity'].value_counts())
+# print(housing.describe())
+
+# Histogram for whole dataset:
+# housing.hist(bins = 50, figsize =(20,15))
+# plt.show()
+
+#Create a test set: 20% of data
+# housing2 = housing.sample(frac = 1)
+# test_set = housing2[-4128:-1]
+# train_set = housing2[:-4128]
+
+# SAmpling using sklearn
+# using 42 as random state generates the same sample every time. 42 is random, could be any number
+# train_set, test_set = train_test_split(housing, test_size = 0.2, random_state = 42)
+
+# CORRELATION WITH MEDIAN HOUSE VALUE
+# corr_matrix = housing.corr()
+# print(corr_matrix['median_house_value'].sort_values(ascending = False))
+
+#CORRELATION USING PANDAS SCATTER MATRIX
+#Looking for correlations for long, lat, pop, mi, mhv
+
+# housing = housing[['longitude', 'latitude', 'population', 'median_income', 'median_house_value']]
+# print(scatter_matrix(housing, alpha=0.2, figsize=(6, 6), diagonal='kde', color = 'b'))
+# plt.show()
+
+#Explore Data
+# plt.scatter(housing['longitude'], housing['latitude'],s=10, color = 'b')
+# plt.show()
+#with density of data point using alpha = 0.1:
+# plt.scatter(housing['longitude'], housing['latitude'],s=10, color = 'b', alpha = 0.1)
+# plt.show()
+
+# housing.plot(kind= 'scatter',x='longitude', y='latitude', alpha=0.4,
+# 	s=housing['population']/100, label = 'population', c='median_house_value',
+# 	cmap=plt.get_cmap('jet'), colorbar=True)
+# plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

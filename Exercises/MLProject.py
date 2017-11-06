@@ -7,7 +7,13 @@ from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.preprocessing import Imputer
-from sklear.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import FeatureUnion
+from sklearn.preprocessing import LabelBinarizer
+from sklearn.linear_model import LinearRegression
 import pandas as pd
 from pandas.plotting import scatter_matrix
 
@@ -72,38 +78,60 @@ strat_test_set.drop('income_cat', 1, inplace=True)
 # plt.show()
 
 #Prepare data for ML - training set
-X_train = strat_train_set.drop('median_house_value', 1, inplace=True)
 y_train = strat_train_set['median_house_value'].copy()
+X_train = strat_train_set.drop('median_house_value', 1, inplace=True)
 
-# #Data Cleaning
-# #IMPUTER from sklearn replaces missing values with median of attribute
 
-# imputer = Imputer(strategy = 'median')
+#Data Cleaning
+#IMPUTER from sklearn replaces missing values with median of attribute
+
+imputer = Imputer(strategy = 'median')
 
 #ocean proximity doesn't have values, so we'll drop it for this
-housing_num = housing.drop('ocean_proximity', 1, inplace=True)
+median = housing['total_bedrooms'].median()
+housing['total_bedrooms'].fillna(median, inplace=True)
+
+housing_num = housing.drop('ocean_proximity', 1)
+
+print(housing_num.head())
 
 imputer.fit(housing_num)
 X = imputer.transform(housing_num)
 
-#Change ocean proximity to numbers:
-encoder = LabelEncoder()
-housing_cat = housing['ocean_proximity']
-housing_cat_encoded = encoder.fit_transform(housing_cat)
+# #Change ocean proximity to numbers:
+# encoder = LabelEncoder()
+# housing_cat = housing['ocean_proximity']
+# housing_cat_encoded = encoder.fit_transform(housing_cat)
 # issue is that in this instance the numbers aren't in order
 # can be fixed with OneHotEncoder or with custom function
 
+#Feature scaling: in ML, attritbutes have to have a similar scale
+# DAta should be resized to have similar scale
+
+#SKLEARN only works with np arrays, not dataframes
+
+# Prepare data using Pipelines:
+housing_prepared = pd.read_csv('housing_prepared.csv')
+housing_labels = pd.read_csv('housing_labels.csv')
+
+housing_prepared = np.array(housing_prepared)
+housing_labels = np.array(housing_labels)
+
+print(housing_prepared)
 
 
+# LInear Reg:
+X = housing_prepared
+y = housing_labels
+
+clf = LinearRegression()
+
+clf.fit(X,y)
+
+print(len(X), len(y))
 
 
-
-
-
-
-
-
-
+print(X)
 
 
 

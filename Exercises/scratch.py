@@ -1,16 +1,20 @@
-import plotly 
-plotly.tools.set_credentials_file(username='depzai', api_key='hdxPNKwE7K8OK8q79h1G')
-import plotly.plotly as py
-import plotly.figure_factory as ff
+import matplotlib.pyplot as plt
+from matplotlib import style
+style.use('ggplot')
+import numpy as np
+import sklearn
+from sklearn.cluster import KMeans
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import Imputer
+from sklearn.preprocessing import LabelEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import FeatureUnion
+import pandas as pd
+from pandas.plotting import scatter_matrix
 
+housing = pd.read_csv("housing.csv")
+print(housing.head())
 
-data_matrix = [['Country', 'Year', 'Population'],
-               ['United States', 2000, 282200000],
-               ['Canada', 2000, 27790000],
-               ['United States', 2005, 295500000],
-               ['Canada', 2005, 32310000],
-               ['United States', 2010, 309000000],
-               ['Canada', 2010, 34000000]]
-
-table = ff.create_table(data_matrix)
-py.iplot(table, filename='simple_table')
