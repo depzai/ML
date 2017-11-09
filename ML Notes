@@ -404,6 +404,11 @@ defauls n_clusters is 8
 Mean Shift:
 -----------
 Machine finds a number of its own clusters
+Hierarchical clustering algo
+RADIUS (bandwidth): data point that are within the radius from the cluster center
+
+K means starts with all data points as cluster centers and then sees which ones have the most datapoints within radius and gradually eliminates some datapoints
+
 
 
 

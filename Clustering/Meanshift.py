@@ -1,41 +1,32 @@
+import numpy as np
+from sklearn.cluster import MeanShift
+from sklearn.datasets.samples_generator import make_blobs
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import style
+style.use("ggplot")
 
-# in dataset: numbers 1 to 10, 
-# classes: 2 is benign, 4 is malignant
+centers = [[1,1,1],[5,5,5],[3,10,10]]
 
-import pandas as pd 
-import numpy as np 
-from sklearn import preprocessing, model_selection 
-from sklearn.neighbors import KNeighborsClassifier
+X, _ = make_blobs(n_samples = 100, centers = centers, cluster_std = 1.5)
 
-df = pd.read_csv('breast-cancer-wisconsin.data.txt')
-#replace '?' in dataset
+ms = MeanShift()
+ms.fit(X)
+labels = ms.labels_
+cluster_centers = ms.cluster_centers_
 
-df.replace('?', -99999, inplace = True)
-# print(df)
-df.drop(['id'], 1, inplace=True)
+print(cluster_centers)
+n_clusters_ = len(np.unique(labels))
+print("Number of estimated clusters:", n_clusters_)
 
-# X is features, y is labels
+colors = 10*['r','g','b','c','k','y','m']
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 
-X = np.array(df.drop(['class'],1))
-y = np.array(df['class'])
+for i in range(len(X)):
+    ax.scatter(X[i][0], X[i][1], X[i][2], c=colors[labels[i]], marker='o')
 
+ax.scatter(cluster_centers[:,0],cluster_centers[:,1],cluster_centers[:,2],
+            marker="x",color='k', s=150, linewidths = 5, zorder=10)
 
-#use 20% of datat to train and to test
-X_train, X_test, y_train, y_test, = model_selection.train_test_split(X,y,test_size = 0.2)
-
-clf = KNeighborsClassifier()
-
-clf.fit(X_train, y_train)
-
-accuracy = clf.score(X_test, y_test)
-
-print(accuracy)
-
-example_measures = np.array([4,2,1,1,1,2,3,2,1])
-print(example_measures)
-#NEED 2d array instead of 1d array so reshape:
-example_measures = example_measures.reshape(1,-1)
-print(example_measures)
-prediction = clf.predict(example_measures)
-
-print(prediction)
+plt.show()
