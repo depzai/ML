@@ -27,6 +27,7 @@ DETERMINE WHO WOULD SURVIVE BASED ON THE DATA
 
 '''
 df = pd.read_excel('titanic.xls')
+original_df = pd.DataFrame.copy(df)
 
 df.drop(['name','body'],1, inplace = True)
 # df.convert_objects(convert_numeric=True)
@@ -57,38 +58,36 @@ df = handle_non_numerical_data(df)
 
 print(df.head())
 
-clf = KMeans(n_clusters = 2)
+clf = MeanShift()
 df1 = df.drop(['survived'], 1)
 X = np.array(df1)
-y = np.array(df['survived'])
+y = np.arraxy(df['survived'])
 
 print(X)
 
 clf.fit(X)
 
+labels = clf.labels_
+cluster_centers = clf.cluster_centers_
+original_df['cluster_group'] = np.nan
 
+print(np.unique(labels))
 
-#Accuracy:
-predictions = []
-for i in range(len(X)):
-	pred = np.array(X[i])
-	pred = pred.reshape(-1,len(X[i]))
-	predix = clf.predict(pred)
-	predictions.append(predix)
+for i in range(len(df)):
+    original_df['cluster_group'].iloc[i] = labels[i]
 
+n_clusters_ = len(np.unique(labels))
 
-print(predictions)
+survival_rates = {}
+for i in range(n_clusters_):
+    temp_df = original_df[ (original_df['cluster_group']==float(i)) ]
+    #print(temp_df.head())
 
+    survival_cluster = temp_df[  (temp_df['survived'] == 1) ]
 
-
-
-
-
-
-
-
-
-
-
-
+    survival_rate = len(survival_cluster) / len(temp_df)
+    #print(i,survival_rate)
+    survival_rates[i] = survival_rate
+    
+print(survival_rates)
 
