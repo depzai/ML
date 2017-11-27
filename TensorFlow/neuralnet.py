@@ -84,7 +84,9 @@ def neural_network_model(data):
 
 	return output
 
-
+# Now the model is done we can train this model. We have to explain
+# to tensorflow what to do with it
+# we need to run data through the model in the sessions
 
 
 
