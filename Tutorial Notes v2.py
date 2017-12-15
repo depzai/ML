@@ -129,6 +129,16 @@ print(super_villains['Captain Cold'])
 print(super_villains.get('Fiddler'))
 print(super_villains.values())
 
+dico = {}
+
+a = ['apple', 'orange', 'banana']
+b = ['red', 'orange', 'yellow']
+
+for i in range(len(a)):
+    dico[a[i]] = b[i]
+
+print(dico)
+
 # COnditionals
 age = 21
 if age > 16:
@@ -475,6 +485,11 @@ conversion = np.array([0.0254, 0.453592, 1])
 # Print out product of np_baseball and conversion
 print(np_baseball * conversion)
 
+
+#Append in numpy:
+X = np.array([x_values[0], y_values[0]])
+for i in range(1,len(x_values)):
+    X = np.vstack([X, [x_values[i], y_values[i]]])
 
 # CSV Module
 import csv

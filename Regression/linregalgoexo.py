@@ -10,6 +10,8 @@ style.use('fivethirtyeight')
 
 df = quandl.get("WIKI/AMZN")
 
+print(df.head(50))
+
 df = df.tail(1000)
 
 

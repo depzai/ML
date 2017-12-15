@@ -6,8 +6,8 @@ style.use('ggplot')
 import numpy as np
 
 
-def importfile(source):
-#    source = input('What is the path to the file?')
+def importfile():
+    source = input('What is the path to the file?')
     print('path to the file:')
     print(source)
     global file
@@ -18,7 +18,7 @@ def importfile(source):
     
 #importfile()    
 
-#/Users/bddupont/Desktop/BI/Python/Housing.csv
+#/Users/bddupont/Desktop/BI/Python/housing.csv
 
 def explaindata():
     global dims
@@ -75,7 +75,7 @@ def info():
     print('Pivot Table function: pivotdata(#categories, values column, category 1, category 2, sum or count)')
 
 info()
-importfile('/Users/bddupont/Desktop/BI/toapid.csv')
+importfile()
 explaindata()
 
 

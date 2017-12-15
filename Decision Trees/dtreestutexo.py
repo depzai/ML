@@ -6,8 +6,8 @@ from sklearn.tree import DecisionTreeClassifier
 # from sklearn.tree import export_graphviz
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-import graphviz
-import sys
+# import graphviz
+# import sys
 
 
 data = pd.read_csv('data.csv')
@@ -25,14 +25,16 @@ print(data.head())
 #HISTOGRAM OF VARIABLE with Target 1 (like music)
 
 danceability_1 = data['danceability'][data['target'] == 1]
+danceability_0 = data['danceability'][data['target'] == 0]
 
 # print(danceability_1.head())
 
-# plt.hist(danceability_1, 50)
-# plt.xlabel('danceability')
-# plt.ylabel('Positives')
-# plt.title('Pos resp to danceability')
-# plt.show()
+plt.hist(danceability_1, 50, color='k')
+plt.hist(danceability_0, 50, color='g')
+plt.xlabel('danceability')
+plt.ylabel('Positives')
+plt.title('Pos resp to danceability')
+plt.show()
 
 X = data[['speechiness', 'liveness', 'energy', 'instrumentalness', 'tempo', 'valence', 'loudness', 'danceability', 'acousticness']]
 y = data['target']
